@@ -9,9 +9,4 @@ Console.WriteLine("Super mini uppdatering!");
 
 
 
-
-
-
-
-
 Console.WriteLine("Yoyo Test3");
