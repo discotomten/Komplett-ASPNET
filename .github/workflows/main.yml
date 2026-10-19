@@ -39,7 +39,7 @@ jobs:
         run: |
           npx -p semantic-release \
               -p @semantic-release/exec \
-              -p conventional-changelog-conventionalcommits \
+              -p conventional-changelog-conventionalcommits@8  \
               semantic-release --dry-run
 
       - name: Ladda upp artefakt
