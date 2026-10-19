@@ -3,7 +3,7 @@
 
 
 System.Console.WriteLine("MIN TUR NU?!");
-
+System.Console.WriteLine("Ge mig min tagg nu!");
 
 
 
