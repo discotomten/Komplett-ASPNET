@@ -28,23 +28,29 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: 'lts/*'
+          node-version: '22'
+          cache: 'npm'
 
       - name: Testa
         run: dotnet test
 
+      - name: Installera beroenden
+        run: npm ci
+
       - name: Semantic release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release
+
+      - name: Läs av senaste version
+        id: version
         run: |
-          npx -p semantic-release \
-              -p @semantic-release/exec \
-              -p conventional-changelog-conventionalcommits@8  \
-              semantic-release --dry-run
+          latest=$(git tag -l 'v*' --sort=-v:refname | head -n1)
+          echo "version=${latest#v}" >> "$GITHUB_OUTPUT"
 
       - name: Ladda upp artefakt
         uses: actions/upload-artifact@v4
         with:
-          name: semantic-vers
+          name: semantic-vers-${{ steps.version.outputs.version }}
           path: semantic-vers-*.zip
           if-no-files-found: ignore
