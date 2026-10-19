@@ -1,0 +1,50 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write       # tagg + release
+  issues: write         # semantic-release kommenterar på lösta issues
+  pull-requests: write  # ...och på mergade PR:er
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+
+      - name: Testa
+        run: dotnet test
+
+      - name: Semantic release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          npx -p semantic-release \
+              -p @semantic-release/exec \
+              -p conventional-changelog-conventionalcommits \
+              semantic-release --dry-run
+
+      - name: Ladda upp artefakt
+        uses: actions/upload-artifact@v4
+        with:
+          name: semantic-vers
+          path: semantic-vers-*.zip
+          if-no-files-found: ignore
