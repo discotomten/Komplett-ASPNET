@@ -1,0 +1,14 @@
+{
+  "branches": ["main"],
+  "tagFormat": "v${version}",
+  "plugins": [
+    ["@semantic-release/commit-analyzer", { "preset": "conventionalcommits" }],
+    ["@semantic-release/release-notes-generator", { "preset": "conventionalcommits" }],
+    ["@semantic-release/exec", {
+      "prepareCmd": "dotnet publish -c Release -r win-x64 --self-contained false -p:Version=${nextRelease.version} -p:FileVersion=${nextRelease.version} -o out && cd out && zip -r ../semantic-vers-${nextRelease.version}-win-x64.zip ."
+    }],
+    ["@semantic-release/github", {
+      "assets": [{ "path": "semantic-vers-*-win-x64.zip" }]
+    }]
+  ]
+}
