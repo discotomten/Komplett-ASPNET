@@ -2,7 +2,7 @@
 
 
 
-
+System.Console.WriteLine("MIN TUR NU?!");
 
 
 
